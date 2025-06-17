@@ -38,11 +38,21 @@ mode = st.sidebar.radio("Prediction Input Method", ["Single Input", "Upload CSV"
 model_path = model_map[task_type][model_choice]
 model = joblib.load(model_path)
 
-# Define input schema for demonstration (customize based on your dataset)
+# Define input schema (training may have had more features, but only these are used now)
 example_inputs = {
     "Classification": ["diagonal", "height_left", "height_right", "margin_low", "margin_up", "length"],
-    "Regression": ["screen_time_hours", "social_media_platforms_used", "hours_on_TikTok", "sleep_hours", "mood_score_transformed"]
+    "Regression": ["screen_time_hours", "social_media_platforms_used", "hours_on_TikTok", "sleep_hours"]
 }
+
+# All 6 features used in training regression model
+full_regression_features = [
+    "screen_time_hours",
+    "social_media_platforms_used",
+    "hours_on_TikTok",
+    "sleep_hours",
+    "mood_score",
+    "mood_score_transformed"
+]
 
 feature_names = example_inputs[task_type]
 
@@ -56,8 +66,14 @@ if mode == "Single Input":
         user_input.append(val)
 
     if st.button("Predict"):
-        X = np.array(user_input).reshape(1, -1)
-        y_pred = model.predict(X)
+        X_partial = np.array(user_input).reshape(1, -1)
+        if task_type == "Regression":
+            # Add default values for mood_score and mood_score_transformed
+            X_full = np.hstack([X_partial, [[10.0, 0.8]]])  # two zeros as placeholders
+        else:
+            X_full = X_partial
+
+        y_pred = model.predict(X_full)
 
         if task_type == "Classification":
             st.success(f"🔍 Predicted Class: {int(y_pred[0])}")
@@ -73,8 +89,17 @@ else:
         st.write("✅ Uploaded Data Preview:", df.head())
 
         try:
-            X = df[feature_names]
-            y_pred = model.predict(X)
+            X_partial = df[feature_names]
+            if task_type == "Regression":
+                # Add default columns for missing features
+                X_partial = X_partial.copy()
+                X_partial["mood_score"] = 0.0
+                X_partial["mood_score_transformed"] = 0.0
+                X_full = X_partial[full_regression_features]
+            else:
+                X_full = X_partial
+
+            y_pred = model.predict(X_full)
             df["Prediction"] = y_pred
             st.success("✅ Prediction completed.")
             st.write(df.head())
