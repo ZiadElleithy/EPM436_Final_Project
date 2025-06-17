@@ -66,10 +66,11 @@ if mode == "Single Input":
         user_input.append(val)
 
     if st.button("Predict"):
-        X_partial = np.array(user_input).reshape(1, -1)
+        X_partial = pd.DataFrame([user_input], columns=feature_names)
         if task_type == "Regression":
-            # Add default values for mood_score and mood_score_transformed
-            X_full = np.hstack([X_partial, [[9.0868, 0.0]]])  # two zeros as placeholders
+            X_partial["mood_score"] = 9.0868
+            X_partial["mood_score_transformed"] = 0.0
+            X_full = X_partial[full_regression_features]
         else:
             X_full = X_partial
 
@@ -79,7 +80,10 @@ if mode == "Single Input":
             result_text = "Genuine" if y_pred[0] else "Fake"
             st.success(f"🔍 Predicted Class: {result_text}")
         else:
-            st.success(f"🧠 Your Stress Level is: {y_pred[0]:.2f}")
+            stress_level = y_pred[0]
+            st.success(f"🧠 Your Stress Level is: {stress_level:.2f}")
+            if stress_level < 0:
+                st.warning("😵‍💫 You have transcended stress. Either you're in heaven... or you're dead. 😅")
             st.info("Interpretation:\n- 🟢 0–4.9 → Low stress\n- 🟡 5–6.9 → Moderate\n- 🟠 7–9.9 → High\n- 🔴 10+ → Very High Stress")
 
 else:
