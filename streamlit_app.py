@@ -79,7 +79,8 @@ if mode == "Single Input":
             result_text = "Genuine" if y_pred[0] else "Fake"
             st.success(f"🔍 Predicted Class: {result_text}")
         else:
-            st.success(f"🧠 Your Stress Level is: {y_pred[0]:.2f} (lower means less stressed, higher means more stressed)")
+            st.success(f"🧠 Your Stress Level is: {y_pred[0]:.2f}")
+            st.info("Interpretation:\n- 🟢 0–4.9 → Low stress\n- 🟡 5–6.9 → Moderate\n- 🟠 7–9.9 → High\n- 🔴 10+ → Very High Stress")
 
 else:
     st.markdown("### Upload a CSV file with feature columns")
@@ -94,7 +95,7 @@ else:
             if task_type == "Regression":
                 # Add default columns for missing features
                 X_partial = X_partial.copy()
-                X_partial["mood_score"] = 0.0
+                X_partial["mood_score"] = 9.0868
                 X_partial["mood_score_transformed"] = 0.0
                 X_full = X_partial[full_regression_features]
             else:
