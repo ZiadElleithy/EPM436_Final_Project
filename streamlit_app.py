@@ -69,7 +69,7 @@ if mode == "Single Input":
         X_partial = np.array(user_input).reshape(1, -1)
         if task_type == "Regression":
             # Add default values for mood_score and mood_score_transformed
-            X_full = np.hstack([X_partial, [[10.0, 0.8]]])  # two zeros as placeholders
+            X_full = np.hstack([X_partial, [[9.0868, 0.0]]])  # two zeros as placeholders
         else:
             X_full = X_partial
 
