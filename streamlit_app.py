@@ -22,9 +22,9 @@ model_map = {
         "Neural Network": "neural_network_classifier.pkl"
     },
     "Regression": {
-        "Linear Regression": "linear_regression.pkl",
-        "KNN Regressor": "knn_regressor.pkl",
-        "Neural Network": "neural_network.pkl"
+        "Linear Regression": "linear_regression_regressor.pkl",
+        "KNN Regressor": "knn_regressor_regressor.pkl",
+        "Neural Network": "neural_network_regressor.pkl"
     }
 }
 
@@ -44,8 +44,8 @@ scaler = joblib.load(scaler_path)
 
 # Define input schema for demonstration (customize based on your dataset)
 example_inputs = {
-    "Classification": ["duration", "steps", "heart_rate"],
-    "Regression": ["sleep_quality", "mood_score_transformed", "steps"]
+    "Classification (in mm)": ["Banknote Length", "Banknote Height_Left", "Banknote Height_Right", "Banknote Height_Diagonal"],
+    "Regression": ["Daily Screen-Time (hrs)", "Hours spent on TikTok", "The Number of Social Media Platforms Used", "Daily Sleep Hours (hrs)"]
 }
 
 feature_names = example_inputs[task_type]
