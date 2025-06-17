@@ -76,9 +76,10 @@ if mode == "Single Input":
         y_pred = model.predict(X_full)
 
         if task_type == "Classification":
-            st.success(f"🔍 Predicted Class: {int(y_pred[0])}")
+            result_text = "Genuine" if y_pred[0] else "Fake"
+            st.success(f"🔍 Predicted Class: {result_text}")
         else:
-            st.success(f"🔍 Predicted Value: {y_pred[0]:.2f}")
+            st.success(f"🧠 Your Stress Level is: {y_pred[0]:.2f} (lower means less stressed, higher means more stressed)")
 
 else:
     st.markdown("### Upload a CSV file with feature columns")
@@ -100,7 +101,11 @@ else:
                 X_full = X_partial
 
             y_pred = model.predict(X_full)
-            df["Prediction"] = y_pred
+            if task_type == "Classification":
+                df["Prediction"] = ["Genuine" if pred else "Fake" for pred in y_pred]
+            else:
+                df["Prediction"] = y_pred
+
             st.success("✅ Prediction completed.")
             st.write(df.head())
 
