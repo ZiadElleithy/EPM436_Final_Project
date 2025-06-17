@@ -45,7 +45,7 @@ scaler = joblib.load(scaler_path)
 # Define input schema for demonstration (customize based on your dataset)
 example_inputs = {
     "Classification": ["diagonal", "height_left", "height_right", "margin_low", "margin_up", "length"],
-    "Regression": ["screen_time_hours", "social_media_platforms_used", "Thours_on_TikTok", "sleep_hours", "mood_score"]
+    "Regression": ["screen_time_hours", "social_media_platforms_used", "hours_on_TikTok", "sleep_hours", "mood_score"]
 }
 
 feature_names = example_inputs[task_type]
