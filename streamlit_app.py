@@ -14,17 +14,17 @@ st.title("🔍 Machine Learning Model Explorer – Classification & Regression")
 st.sidebar.header("🧭 Navigation")
 task_type = st.sidebar.radio("Select Task Type", ["Classification", "Regression"])
 
-# Model and pkl mapping
+# Model and pkl mapping (matches saved filenames exactly)
 model_map = {
     "Classification": {
-        "Naive Bayes": "naive_bayes_classifier.pkl",
-        "Random Forest": "random_forest_classifier.pkl",
-        "Neural Network": "neural_network_classifier.pkl"
+        "Naive Bayes": "naive_bayes_pipeline.pkl",
+        "Random Forest": "random_forest_pipeline.pkl",
+        "Neural Network": "neural_network_pipeline.pkl"
     },
     "Regression": {
-        "Linear Regression": "linear_regression_regressor.pkl",
-        "KNN Regressor": "knn_regressor_regressor.pkl",
-        "Neural Network": "neural_network_regressor.pkl"
+        "Linear Regression": "linear_regression_pipeline.pkl",
+        "KNN Regressor": "knn_regressor_pipeline.pkl",
+        "Neural Network Regressor": "neural_network_regressor_pipeline.pkl"
     }
 }
 
@@ -37,10 +37,6 @@ mode = st.sidebar.radio("Prediction Input Method", ["Single Input", "Upload CSV"
 # Load model
 model_path = model_map[task_type][model_choice]
 model = joblib.load(model_path)
-
-# Load corresponding scaler
-scaler_path = "scaler_class.pkl" if task_type == "Classification" else "scaler_reg.pkl"
-scaler = joblib.load(scaler_path)
 
 # Define input schema for demonstration (customize based on your dataset)
 example_inputs = {
@@ -61,8 +57,7 @@ if mode == "Single Input":
 
     if st.button("Predict"):
         X = np.array(user_input).reshape(1, -1)
-        X_scaled = scaler.transform(X)
-        y_pred = model.predict(X_scaled)
+        y_pred = model.predict(X)
 
         if task_type == "Classification":
             st.success(f"🔍 Predicted Class: {int(y_pred[0])}")
@@ -79,8 +74,7 @@ else:
 
         try:
             X = df[feature_names]
-            X_scaled = scaler.transform(X)
-            y_pred = model.predict(X_scaled)
+            y_pred = model.predict(X)
             df["Prediction"] = y_pred
             st.success("✅ Prediction completed.")
             st.write(df.head())
